@@ -5,6 +5,7 @@ package com.mallis.model;
  * @author Anup Wagle 23048623
  */
 public class MallBlocks {
+
     private int spaceID;
     private int customerID;
     private String customerName;
@@ -25,8 +26,7 @@ public class MallBlocks {
         this.available = true;
     }
 
-    // Getters and Setters...
-
+    // Getters and Setters
     public int getSpaceID() {
         return spaceID;
     }

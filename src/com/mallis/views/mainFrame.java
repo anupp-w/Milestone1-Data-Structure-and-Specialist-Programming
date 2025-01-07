@@ -1,7 +1,12 @@
 package com.mallis.views;
 
+import com.mallis.controller.BinarySearch;
+import com.mallis.controller.InsertionSort;
+import com.mallis.controller.MergeSort;
+import com.mallis.controller.SelectionSort;
 import com.mallis.model.MallBlocks;
 import java.awt.event.ActionEvent;
+import java.util.Collections;
 import java.util.LinkedList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -26,9 +31,8 @@ public class mainFrame extends javax.swing.JFrame {
         BlockData.add(new MallBlocks(701, 401, "Pawan", 7, 900, 5));
         updateDataTable();
     }
-    
-    private LinkedList<MallBlocks> BlockData = new LinkedList<>();
 
+    private LinkedList<MallBlocks> BlockData = new LinkedList<>();
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -75,6 +79,12 @@ public class mainFrame extends javax.swing.JFrame {
         dataTableTabPnl = new javax.swing.JPanel();
         tableScrollPane = new javax.swing.JScrollPane();
         dataTable = new javax.swing.JTable();
+        sortLbl = new javax.swing.JLabel();
+        sortByComBox = new javax.swing.JComboBox<>();
+        ascDscComBox = new javax.swing.JComboBox<>();
+        sortButton = new javax.swing.JButton();
+        searchTxtFld = new javax.swing.JTextField();
+        searchButton = new javax.swing.JButton();
         bgLbl = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -110,6 +120,12 @@ public class mainFrame extends javax.swing.JFrame {
         passwordLbl.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
         passwordLbl.setForeground(new java.awt.Color(255, 255, 255));
         passwordLbl.setText("Password");
+
+        passField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                passFieldActionPerformed(evt);
+            }
+        });
 
         forgotpasswordLbl.setFont(new java.awt.Font("Candara", 0, 8)); // NOI18N
         forgotpasswordLbl.setForeground(new java.awt.Color(255, 255, 255));
@@ -473,17 +489,75 @@ public class mainFrame extends javax.swing.JFrame {
             dataTable.getColumnModel().getColumn(7).setResizable(false);
         }
 
+        sortLbl.setFont(new java.awt.Font("The Bold Font", 0, 14)); // NOI18N
+        sortLbl.setForeground(new java.awt.Color(43, 48, 59));
+        sortLbl.setText("Sort By:");
+
+        sortByComBox.setMaximumRowCount(2);
+        sortByComBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Space ID", "Customer Name" }));
+        sortByComBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sortByComBoxActionPerformed(evt);
+            }
+        });
+
+        ascDscComBox.setMaximumRowCount(2);
+        ascDscComBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ascending", "Descending" }));
+        ascDscComBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ascDscComBoxActionPerformed(evt);
+            }
+        });
+
+        sortButton.setText("Sort");
+        sortButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sortButtonActionPerformed(evt);
+            }
+        });
+
+        searchButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/mallis/resources/search.png"))); // NOI18N
+        searchButton.setText("Search");
+        searchButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout dataTableTabPnlLayout = new javax.swing.GroupLayout(dataTableTabPnl);
         dataTableTabPnl.setLayout(dataTableTabPnlLayout);
         dataTableTabPnlLayout.setHorizontalGroup(
             dataTableTabPnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(tableScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 760, Short.MAX_VALUE)
+            .addGroup(dataTableTabPnlLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(sortLbl)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sortByComBox, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ascDscComBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sortButton, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(searchTxtFld, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(searchButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         dataTableTabPnlLayout.setVerticalGroup(
             dataTableTabPnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(dataTableTabPnlLayout.createSequentialGroup()
-                .addComponent(tableScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 474, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(9, 9, 9)
+                .addGroup(dataTableTabPnlLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(sortLbl)
+                    .addComponent(sortByComBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ascDscComBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchTxtFld, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(searchButton)
+                    .addComponent(sortButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(tableScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 433, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         mainPageTabs.addTab("Data Table", dataTableTabPnl);
@@ -492,6 +566,7 @@ public class mainFrame extends javax.swing.JFrame {
         mainPageTabs.setBounds(20, 110, 760, 290);
         mainPageTabs.getAccessibleContext().setAccessibleName("Home");
 
+        bgLbl.setForeground(new java.awt.Color(17, 43, 54));
         bgLbl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/mallis/resources/anything.jpg"))); // NOI18N
         mainPagePnl.add(bgLbl);
         bgLbl.setBounds(0, 0, 800, 450);
@@ -558,7 +633,6 @@ public class mainFrame extends javax.swing.JFrame {
         loginPnl.setVisible(true);
     }//GEN-LAST:event_logoutButtonActionPerformed
 
-    
     private void clearInputFields() {
         spaceIDTxtFld.setText("");
         customerIDTxtFld.setText("");
@@ -567,7 +641,7 @@ public class mainFrame extends javax.swing.JFrame {
         monPriceTxtFld.setText("");
         rentalMonthsTxtFld.setText("");
     }
-    
+
     private void addDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addDataButtonActionPerformed
         try {
             int spaceID = Integer.parseInt(spaceIDTxtFld.getText());
@@ -582,12 +656,10 @@ public class mainFrame extends javax.swing.JFrame {
             clearInputFields();
             JOptionPane.showMessageDialog(this, "Data added successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
 
-        } 
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Enter Numeric Data Properly!!!", "Input Error", JOptionPane.ERROR_MESSAGE);
-        } 
-        catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error Detected"+ e, "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error Detected" + e, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_addDataButtonActionPerformed
 
@@ -641,10 +713,10 @@ public class mainFrame extends javax.swing.JFrame {
             boolean found = false;
             for (MallBlocks block : BlockData) {
                 if (block.getSpaceID() == spaceID) {
-                    BlockData.remove(block); 
+                    BlockData.remove(block);
                     found = true;
                     JOptionPane.showMessageDialog(this, "Data deleted successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
-                    break; 
+                    break;
                 }
             }
 
@@ -654,11 +726,9 @@ public class mainFrame extends javax.swing.JFrame {
 
             updateDataTable();
 
-        } 
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Please enter a valid Space ID", "Numeric Input Error", JOptionPane.ERROR_MESSAGE);
-        } 
-        catch (Exception e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error detected: ", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_deleteDataButtonActionPerformed
@@ -675,6 +745,72 @@ public class mainFrame extends javax.swing.JFrame {
     private void getStartedButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getStartedButtonActionPerformed
         mainPageTabs.setSelectedIndex(1);
     }//GEN-LAST:event_getStartedButtonActionPerformed
+
+    private void passFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_passFieldActionPerformed
+
+    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
+        String searchText = searchTxtFld.getText().trim();
+
+        try {
+            int searchSpaceID = Integer.parseInt(searchText);
+
+            String selectedCriteria = (String) sortByComBox.getSelectedItem();
+            if (selectedCriteria.equals("Space ID")) {
+                MergeSort.sortBySpaceID(BlockData);
+            }
+
+            MallBlocks result = BinarySearch.searchBySpaceID(BlockData, searchSpaceID);
+
+            if (result != null) {
+                String infoMessage = "Space ID: " + result.getSpaceID()
+                        + "\nCustomer ID: " + result.getCustomerID()
+                        + "\nCustomer Name: " + result.getCustomerName()
+                        + "\nFlat Number: " + result.getFlatNumber()
+                        + "\nMonthly Price: " + result.getMonthlyPrice()
+                        + "\nRental Months: " + result.getRentalMonths()
+                        + "\nFull Price: " + result.getFullPrice()
+                        + "\nAvailability: " + (result.isAvailable() ? "Available" : "Not Available");
+
+                JOptionPane.showMessageDialog(this, infoMessage, "Searched Data", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, "Space ID not found!", "Search Fail", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Enter Space ID!", "Input ID", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_searchButtonActionPerformed
+
+    private void sortButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortButtonActionPerformed
+        String selectedCriteria = (String) sortByComBox.getSelectedItem();
+        String sortOrder = (String) ascDscComBox.getSelectedItem();
+
+        if (selectedCriteria.equals("Customer Name")) {
+            if (sortOrder.equals("Ascending")) {
+                SelectionSort.sortByCustomerName(BlockData, true);
+            } else {
+                SelectionSort.sortByCustomerName(BlockData, false);
+            }
+        } else if (selectedCriteria.equals("Space ID")) {
+            if (sortOrder.equals("Ascending")) {
+                MergeSort.sortBySpaceID(BlockData);
+            } else {
+                InsertionSort.sortBySpaceIDDescending(BlockData);
+            }
+        }
+
+        updateDataTable();
+    }//GEN-LAST:event_sortButtonActionPerformed
+
+    private void sortByComBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortByComBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_sortByComBoxActionPerformed
+
+    private void ascDscComBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ascDscComBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ascDscComBoxActionPerformed
 
     /**
      * @param args the command line arguments
@@ -714,6 +850,7 @@ public class mainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addDataButton;
     private javax.swing.JPanel adminDashTabPnl;
+    private javax.swing.JComboBox<String> ascDscComBox;
     private javax.swing.JLabel bgImgLbl;
     private javax.swing.JLabel bgLbl;
     private javax.swing.JPanel buttonHolderPnl;
@@ -741,6 +878,11 @@ public class mainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel passwordLbl;
     private javax.swing.JTextField rentalMonthsTxtFld;
     private javax.swing.JPanel rightPnlCover;
+    private javax.swing.JButton searchButton;
+    private javax.swing.JTextField searchTxtFld;
+    private javax.swing.JButton sortButton;
+    private javax.swing.JComboBox<String> sortByComBox;
+    private javax.swing.JLabel sortLbl;
     private javax.swing.JTextField spaceIDTxtFld;
     private javax.swing.JScrollPane tableScrollPane;
     private javax.swing.JLabel textTitleLbl;
